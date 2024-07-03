@@ -37,6 +37,7 @@ const SheetProvider = ({ data, children }: SheetProviderProps) => {
           <Image alt="logo" src="/logo.svg" width={30} height={30} priority />
           <SheetClose>
             <MdClose className="w-6 h-6 text-muted-foreground" />
+            <span className="sr-only">CloseBtn</span>
           </SheetClose>
         </nav>
 
