@@ -6,14 +6,39 @@ import { cn } from "@/lib/utils";
 import { MenuType } from "@/utils/types";
 import { buttonVariants } from "@/components/ui/button";
 import NavItem from "@/app/(root)/_components/navbar/nav-item";
+import {
+  motion,
+  useAnimation,
+  useMotionValueEvent,
+  useScroll,
+} from "framer-motion";
 
 import { FaSearch } from "react-icons/fa";
 
 const BottomNav = ({ data }: { data: MenuType[] }) => {
+  const controls = useAnimation();
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious();
+    if (previous && latest > previous && latest > 0) {
+      controls.start({
+        width: "97%",
+        transition: { duration: 0.5 },
+      });
+    } else {
+      controls.start({
+        width: "75%",
+        transition: { duration: 0.5 },
+      });
+    }
+  });
+
   return (
-    <section
+    <motion.section
+      animate={controls}
       id="bottom"
-      className="hidden lg:flex justify-between items-center lg:w-[75%] mx-auto py-4 px-3 lg:px-0"
+      className="hidden z-30 bg-white dark:bg-[#020817] lg:sticky lg:top-0 lg:flex justify-between items-center lg:w-[75%] mx-auto py-4 px-3 lg:px-0"
     >
       <div className="flex flex-row gap-x-10 justify-between items-center">
         <Image alt="logo" src="/logo.svg" width={40} height={40} priority />
@@ -44,7 +69,7 @@ const BottomNav = ({ data }: { data: MenuType[] }) => {
           </Link>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

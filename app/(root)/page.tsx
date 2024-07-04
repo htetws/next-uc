@@ -1,4 +1,5 @@
 import Carousel from "./_components/carousel";
+import Body from "./_components/body";
 
 const RootPage = () => {
   const images = [
@@ -12,6 +13,7 @@ const RootPage = () => {
   return (
     <div className="flex-1 w-[95%] mt-3 lg:w-[75%] mx-auto">
       <Carousel images={images} />
+      <Body />
     </div>
   );
 };

@@ -2,14 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body,
-:root {
-  height: 100%;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -79,6 +71,6 @@ body,
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground h-full bg-wave bg-no-repeat bg-cover bg-fixed;
   }
 }

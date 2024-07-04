@@ -5,3 +5,10 @@ export interface MenuType {
   icon?: IconType;
   data: { title: string; href: string; icon: IconType }[];
 }
+
+export interface GameCardProps {
+  games: {
+    label: string;
+    data: { id: number; image: string; title: string; region: string }[];
+  }[];
+}

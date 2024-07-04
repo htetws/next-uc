@@ -50,7 +50,7 @@ const Carousel = ({ images }: CarouselProps) => {
     <main className="flex flex-row gap-x-6">
       <div
         onClick={prevSlide}
-        className="group cursor-pointer w-[10%] hidden lg:block h-[22rem] relative rounded-xl overflow-hidden"
+        className="group cursor-pointer w-[15%] hidden lg:block h-[22rem] relative rounded-xl overflow-hidden"
       >
         <Image
           width={1000}
@@ -66,9 +66,10 @@ const Carousel = ({ images }: CarouselProps) => {
         </div>
       </div>
 
-      <div className="relative w-full cursor-pointer h-[10rem] lg:h-[22rem] rounded-md lg:rounded-xl overflow-hidden transition">
+      <div className="relative w-full aspect-video cursor-pointer h-[10rem] lg:h-[22rem] rounded-md lg:rounded-xl overflow-hidden transition">
         <AnimatePresence>
           <motion.div
+            key={currentIndex}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.1}
@@ -83,9 +84,11 @@ const Carousel = ({ images }: CarouselProps) => {
           />
           <Image
             src={images[currentIndex]}
-            alt={`Slide ${currentIndex}`}
+            alt={images[currentIndex]}
             fill
             priority
+            sizes="(max-width: 600px) 100vw, 
+            (max-width: 1200px) 50vw, 33vw"
           />
         </AnimatePresence>
 
@@ -96,7 +99,9 @@ const Carousel = ({ images }: CarouselProps) => {
                 key={idx}
                 role="progressbar"
                 aria-label="progress-bar-div"
-                onClick={() => scrollTo(idx)}
+                onClick={() => {
+                  currentIndex !== idx && scrollTo(idx);
+                }}
                 className={cn(
                   "w-2 h-1 lg:w-[1.4rem] lg:h-[5px] gap-x-3 rounded-full overflow-hidden bg-slate-300",
                   currentIndex === idx && "w-8 lg:w-14 bg-white",
@@ -108,7 +113,7 @@ const Carousel = ({ images }: CarouselProps) => {
                     style={{
                       height: "100%",
                       width: `${progress}%`,
-                      backgroundColor: "blue",
+                      backgroundColor: "#F06225",
                     }}
                   ></div>
                 )}
@@ -120,7 +125,7 @@ const Carousel = ({ images }: CarouselProps) => {
 
       <div
         onClick={nextSlide}
-        className="group cursor-pointer w-[10%] hidden lg:block h-[22rem] relative rounded-xl overflow-hidden"
+        className="group cursor-pointer w-[15%] hidden lg:block h-[22rem] relative rounded-xl overflow-hidden"
       >
         <Image
           width={1000}
