@@ -24,12 +24,14 @@ const BottomNav = ({ data }: { data: MenuType[] }) => {
     if (previous && latest > previous && latest > 0) {
       controls.start({
         width: "97%",
-        transition: { duration: 0.5 },
+        transition: { duration: 0.4 },
       });
-    } else {
+    }
+
+    if (latest === 0) {
       controls.start({
         width: "75%",
-        transition: { duration: 0.5 },
+        transition: { duration: 0.2 },
       });
     }
   });
