@@ -5,14 +5,31 @@ import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { MdArrowRight, MdArrowLeft } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
+import { url } from "inspector";
 
 interface CarouselProps {
   images: string[];
 }
 
+const variants = {
+  initial: (direction: number) => ({
+    x: direction > 0 ? 50 : -50,
+    opacity: 0.3,
+  }),
+  animate: {
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: number) => ({
+    x: direction > 0 ? -50 : 50,
+    opacity: 0.3,
+  }),
+};
+
 const Carousel = ({ images }: CarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [progress, setProgress] = useState<number>(0);
+  const [direction, setDirection] = useState<number>(0);
 
   const prevImage = (currentIndex - 1 + images.length) % images.length;
   const nextImage = (currentIndex + 1) % images.length;
@@ -25,11 +42,13 @@ const Carousel = ({ images }: CarouselProps) => {
   const prevSlide = useCallback(() => {
     const newIndex = prevImage;
     scrollTo(newIndex);
+    setDirection(-1);
   }, [prevImage, scrollTo]);
 
   const nextSlide = useCallback(() => {
     const newIndex = nextImage;
     scrollTo(newIndex);
+    setDirection(1);
   }, [nextImage, scrollTo]);
 
   useEffect(() => {
@@ -39,7 +58,7 @@ const Carousel = ({ images }: CarouselProps) => {
           nextSlide();
           return 0;
         }
-        return prev + 100 / (5000 / 100);
+        return prev + 100 / (6000 / 100);
       });
     }, 100);
 
@@ -66,8 +85,8 @@ const Carousel = ({ images }: CarouselProps) => {
         </div>
       </div>
 
-      <div className="relative w-full aspect-video cursor-pointer h-[10rem] lg:h-[22rem] rounded-md lg:rounded-xl overflow-hidden transition">
-        <AnimatePresence>
+      <div className="w-full relative aspect-video cursor-pointer h-[10rem] lg:h-[22rem] rounded-md lg:rounded-xl overflow-hidden transition">
+        <AnimatePresence initial={false} custom={direction}>
           <motion.div
             key={currentIndex}
             drag="x"
@@ -76,23 +95,31 @@ const Carousel = ({ images }: CarouselProps) => {
             onDragEnd={(e, { offset }) => {
               if (offset.x > 100) {
                 prevSlide();
+                setDirection(-1);
               } else if (offset.x < -100) {
                 nextSlide();
+                setDirection(1);
               }
             }}
-            className="w-full rounded-md lg:rounded-xl z-10 h-full absolute opacity-0"
-          />
-          <Image
-            src={images[currentIndex]}
-            alt={images[currentIndex]}
-            fill
-            priority
-            sizes="(max-width: 600px) 100vw, 
-            (max-width: 1200px) 50vw, 33vw"
-          />
+            variants={variants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            custom={direction}
+            transition={{ duration: 0.4 }}
+            className="w-full overflow-hidden rounded-md lg:rounded-xl h-full"
+          >
+            <Image
+              src={images[currentIndex]}
+              alt={images[currentIndex]}
+              className="pointer-events-none z-10"
+              fill
+              priority
+            />
+          </motion.div>
         </AnimatePresence>
 
-        <div className="flex gap-x-2 absolute z-20 bottom-3 left-1/2 -translate-x-1/2">
+        <div className="flex gap-x-2 absolute bottom-3 z-10 left-1/2 -translate-x-1/2">
           {images.map((_, idx) => {
             return (
               <div
